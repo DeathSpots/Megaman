@@ -1,8 +1,10 @@
 package states;
 
+import classes.Crawler;
 import classes.Enemy;
 import classes.EnemyGroup;
 import classes.Player;
+import classes.Sprouter;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -14,6 +16,7 @@ import flixel.math.FlxMath;
 import flixel.addons.editors.ogmo.FlxOgmoLoader;
 import flixel.tile.FlxTilemap;
 import flixel.FlxObject;
+import classes.StaticReferences;
 
 class PlayState extends FlxState
 {
@@ -26,8 +29,9 @@ class PlayState extends FlxState
 	private var map:FlxTilemap;
 	private var map2:FlxTilemap;
 	
-	//private var enemy: Enemy; 
-	private var Enemies:FlxTypedGroup<Enemy>=new FlxTypedGroup<Enemy>();
+	
+	private var Enemies:FlxTypedGroup<Enemy> = new FlxTypedGroup<Enemy>();
+	
 	
 	override public function create():Void
 	{
@@ -38,13 +42,15 @@ class PlayState extends FlxState
 		map = loader.loadTilemap(AssetPaths.MegaTiles__png, 16, 16, "Tiles");
 		map2 = loader.loadTilemap(AssetPaths.MegaTiles__png, 16, 16, "death_tiles");
 		
+		StaticReferences._mapa = map;
+		
 		FlxG.worldBounds.set(0, 0, loader.width, loader.height);
 		
 		map.setTileProperties(3, FlxObject.ANY);
 		map.setTileProperties(5, FlxObject.ANY);
 		map.setTileProperties(7, FlxObject.ANY);
-		map2.setTileProperties(6, FlxObject.ANY);
 		map.setTileProperties(4, FlxObject.ANY);
+		map2.setTileProperties(6, FlxObject.ANY);
 		
 		add(map);
 		add(map2);
@@ -77,30 +83,39 @@ class PlayState extends FlxState
 		}
 		
 		if(entityName == "enemies"){
-			var enemy:Enemy = new Enemy(X, Y);
+			var enemy:Sprouter = new Sprouter(X, Y);
 			enemy.immovable = true;
-			Enemies.add(enemy);
-			
+			Enemies.add(enemy);	
+		}
+		
+		if(entityName == "enemies2"){
+			var enemy2:Crawler = new Crawler(X, Y);
+			Enemies.add(enemy2);	
 		}
 		
 	}
 
 	override public function update(elapsed:Float):Void
 	{
-		
-		
+		trace("funciona");
+		//personaje
 		FlxG.collide(map, P);
-		FlxG.collide(Enemies, P);
+		//FlxG.collide(Enemies, P);
+		for( i in 0... Enemies.members.length){
+			if(FlxG.pixelPerfectOverlap(Enemies.members[i], P)){
+				P.kill();
+			}
+		} 
+		
+		
 		if(FlxG.collide(P, map2)){
 			P.kill();
 		}
 		P.isJumping(P.isTouching(FlxObject.FLOOR));
 		
-		//P.collG(Enemies);
+		//enemigos
 		
 		super.update(elapsed);
-		//P.colD(Enemies);
-		//P.colD(enemy);
 		
 	}
 }

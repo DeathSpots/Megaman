@@ -44,6 +44,8 @@ class AssetData {
 			type.set ("flixel/fonts/monsterrat.ttf", Reflect.field (AssetType, "font".toUpperCase ()));
 			path.set ("flixel/images/ui/button.png", "flixel/images/ui/button.png");
 			type.set ("flixel/images/ui/button.png", Reflect.field (AssetType, "image".toUpperCase ()));
+			path.set ("flixel/images/logo/default.png", "flixel/images/logo/default.png");
+			type.set ("flixel/images/logo/default.png", Reflect.field (AssetType, "image".toUpperCase ()));
 			
 			
 			initialized = true;
